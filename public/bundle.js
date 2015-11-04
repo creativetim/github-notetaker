@@ -22945,8 +22945,8 @@
 	var UserProfile = __webpack_require__(204);
 	var Repos = __webpack_require__(205);
 	var Notes = __webpack_require__(206);
-	var ReactFireMixin = __webpack_require__(207);
-	var Firebase = __webpack_require__(208);
+	var ReactFireMixin = __webpack_require__(209);
+	var Firebase = __webpack_require__(210);
 
 	var Profile = React.createClass({
 		mixins: [Router.State, ReactFireMixin],
@@ -22964,6 +22964,9 @@
 		},
 		componentWillUnmount: function () {
 			this.unbind('notes');
+		},
+		handleAddNote: function (newNote) {
+			this.ref.child(this.getParams().username).push(newNote);
 		},
 		render: function () {
 			var username = this.getParams().username;
@@ -22984,7 +22987,10 @@
 				React.createElement(
 					'div',
 					{ className: 'col-md-4' },
-					React.createElement(Notes, { username: username, notes: this.state.notes })
+					React.createElement(Notes, {
+						username: username,
+						notes: this.state.notes,
+						addNote: this.handleAddNote })
 				)
 			);
 		}
@@ -23072,12 +23078,14 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var NotesList = __webpack_require__(209);
+	var NotesList = __webpack_require__(207);
+	var AddNote = __webpack_require__(208);
 
 	var Notes = React.createClass({
 		propTypes: {
-			username: React.PropTypes.string.isRequired,
-			notes: React.PropTypes.array.isRequired
+			addNote: React.PropTypes.func.isRequired,
+			notes: React.PropTypes.array.isRequired,
+			username: React.PropTypes.string.isRequired
 		},
 		render: function () {
 			return React.createElement(
@@ -23089,6 +23097,7 @@
 					'Notes for ',
 					this.props.username
 				),
+				React.createElement(AddNote, { addNote: this.props.addNote, username: this.props.username }),
 				React.createElement(NotesList, { notes: this.props.notes })
 			);
 		}
@@ -23098,6 +23107,72 @@
 
 /***/ },
 /* 207 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var NotesList = React.createClass({
+		render: function () {
+			var notes = this.props.notes.map(function (note, index) {
+				return React.createElement(
+					'li',
+					{ className: 'list-group-item', key: index },
+					' ',
+					note['.value'],
+					' '
+				);
+			});
+
+			return React.createElement(
+				'ul',
+				{ className: 'list-group' },
+				notes
+			);
+		}
+	});
+
+	module.exports = NotesList;
+
+/***/ },
+/* 208 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+
+	var AddNote = React.createClass({
+		propTypes: {
+			username: React.PropTypes.string.isRequired,
+			addNote: React.PropTypes.func.isRequired
+		},
+		handleSubmit: function () {
+			var newNote = this.refs.note.value;
+
+			this.refs.note.value = '';
+			this.props.addNote(newNote);
+		},
+		render: function () {
+			return React.createElement(
+				'div',
+				{ className: 'input-group' },
+				React.createElement('input', { type: 'text', className: 'form-control', ref: 'note', placeholder: 'Add new note' }),
+				React.createElement(
+					'span',
+					{ className: 'input-group-btn' },
+					React.createElement(
+						'button',
+						{ className: 'btn btn-default', type: 'button', onClick: this.handleSubmit },
+						' Submit '
+					)
+				)
+			);
+		}
+
+	});
+
+	module.exports = AddNote;
+
+/***/ },
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -23468,7 +23543,7 @@
 
 
 /***/ },
-/* 208 */
+/* 210 */
 /***/ function(module, exports) {
 
 	/*! @license Firebase v2.3.1
@@ -23741,35 +23816,6 @@
 
 	module.exports = Firebase;
 
-
-/***/ },
-/* 209 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-
-	var NotesList = React.createClass({
-		render: function () {
-			var notes = this.props.notes.map(function (note, index) {
-				console.info('note', note);
-				return React.createElement(
-					'li',
-					{ className: 'list-group-item', key: index },
-					' ',
-					note['.value'],
-					' '
-				);
-			});
-
-			return React.createElement(
-				'ul',
-				{ className: 'list-group' },
-				notes
-			);
-		}
-	});
-
-	module.exports = NotesList;
 
 /***/ }
 /******/ ]);
