@@ -1,0 +1,22 @@
+{
+  "name": "github-notetaker",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "firebase": "^2.3.1",
+    "react": "^0.14.2",
+    "react-router": "^0.13.5",
+    "reactfire": "^0.5.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.0.20",
+    "babel-loader": "^6.0.1",
+    "webpack": "^1.12.2"
+  }
+}
